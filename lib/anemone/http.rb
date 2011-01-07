@@ -134,7 +134,17 @@ module Anemone
     end
 
     def refresh_connection(url)
-      http = Net::HTTP.new(url.host, url.port)
+      begin
+        proxy_uri = URI.parse(ENV['http_proxy'])
+        proxy_host = proxy_uri.host
+        proxy_port = proxy_uri.port
+      rescue
+        proxy_host = nil
+        proxy_port = nil
+      end
+      proxy = Net::HTTP::Proxy(proxy_host,proxy_port)
+      http = proxy.new(url.host, url.port)
+
       if url.scheme == 'https'
         http.use_ssl = true
         http.verify_mode = OpenSSL::SSL::VERIFY_NONE
