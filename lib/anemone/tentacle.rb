@@ -23,6 +23,9 @@ module Anemone
 
         break if link == :END
 
+        link=URI(link) if link and not link.is_a?(URI)
+        referer=URI(referer) if referer and not referer.is_a?(URI)
+
         @http.fetch_pages(link, referer, depth).each { |page| @page_queue << page }
 
         delay
