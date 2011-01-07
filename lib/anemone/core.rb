@@ -6,6 +6,7 @@ require 'anemone/exceptions'
 require 'anemone/page_store'
 require 'anemone/storage'
 require 'anemone/storage/base'
+require "anemone/redis_queue"
 
 module Anemone
 
@@ -145,8 +146,8 @@ module Anemone
       @urls.delete_if { |url| !visit_link?(url) }
       return if @urls.empty?
 
-      link_queue = Queue.new
-      page_queue = Queue.new
+      link_queue = RedisQueue.new("links")
+      page_queue = RedisQueue.new("pages")
 
       @opts[:threads].times do
         @tentacles << Thread.new { Tentacle.new(link_queue, page_queue, @opts).run }

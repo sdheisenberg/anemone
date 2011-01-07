@@ -30,5 +30,10 @@ module Anemone
       self::Redis.new(opts)
     end
 
+    def self.Redis2(opts = {})
+      require 'anemone/storage/redis2'
+      self::Redis2.new(opts)
+    end
+
   end
 end
