@@ -74,7 +74,15 @@ module Anemone
     #
     def doc
       return @doc if @doc
-      @doc = Nokogiri::HTML(@body) if @body && html? rescue nil
+      if @body && html? 
+        @doc = Nokogiri::HTML(@body) rescue nil
+        if @doc
+          # the encoding of @body doesn't match with the declared in the <meta http-equiv = "Content-Type" content = "text/html; charset=XXX">
+          if @doc.meta_encoding and @doc.meta_encoding.to_s != @body.encoding.to_s
+            @doc = Nokogiri::HTML(@body, nil, @doc.meta_encoding) rescue nil
+          end
+        end
+      end
     end
 
     #
