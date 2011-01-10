@@ -115,6 +115,8 @@ module Anemone
         finish = Time.now()
         response_time = ((finish - start) * 1000).round
         @cookie_store.merge!(response['Set-Cookie']) if accept_cookies?
+        #set body encoding to the declared in Content-Type
+        response.body.force_encoding(response.type_params["charset"]) if response.type_params["charset"] rescue nil
         return response, response_time
       rescue EOFError
         refresh_connection(url)
