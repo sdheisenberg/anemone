@@ -83,6 +83,7 @@ module Anemone
           end
         end
       end
+      @doc
     end
 
     #
