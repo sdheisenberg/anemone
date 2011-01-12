@@ -6,7 +6,6 @@ require 'anemone/exceptions'
 require 'anemone/page_store'
 require 'anemone/storage'
 require 'anemone/storage/base'
-require "anemone/redis_queue"
 
 module Anemone
 
@@ -50,7 +49,11 @@ module Anemone
       # accept cookies from the server and send them back?
       :accept_cookies => false,
       # skip any link with a query string? e.g. http://foo.com/?u=user
-      :skip_query_strings => false
+      :skip_query_strings => false,
+      # Manager for the URL processing queue
+      :link_queue => Queue.new,
+      # Manager for the page processing queue
+      :page_queue => Queue.new,
     }
 
     # Create setter methods for all options to be called from the crawl block
@@ -146,8 +149,8 @@ module Anemone
       @urls.delete_if { |url| !visit_link?(url) }
       return if @urls.empty?
 
-      link_queue = RedisQueue.new("links")
-      page_queue = RedisQueue.new("pages")
+      link_queue = @opts[:link_queue]
+      page_queue = @opts[:page_queue]
 
       @opts[:threads].times do
         @tentacles << Thread.new { Tentacle.new(link_queue, page_queue, @opts).run }
