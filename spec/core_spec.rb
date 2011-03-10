@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/spec_helper'
+require File.expand_path(File.dirname(__FILE__)) + '/spec_helper'
 %w[pstore tokyo_cabinet].each { |file| require "anemone/storage/#{file}.rb" }
 
 module Anemone
