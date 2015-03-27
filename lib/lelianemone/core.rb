@@ -1,11 +1,11 @@
 require 'thread'
 require 'robots'
-require 'anemone/tentacle'
-require 'anemone/page'
-require 'anemone/exceptions'
-require 'anemone/page_store'
-require 'anemone/storage'
-require 'anemone/storage/base'
+require 'lelianemone/tentacle'
+require 'lelianemone/page'
+require 'lelianemone/exceptions'
+require 'lelianemone/page_store'
+require 'lelianemone/storage'
+require 'lelianemone/storage/base'
 
 module Anemone
 
@@ -266,7 +266,7 @@ module Anemone
     end
 
     def in_allowed_subdomain?(link)
-      opts[:crawl_subdomains] and @valid_domains.find{|domain| link.host.end_with?(domain)}
+      opts[:crawl_subdomains] and @valid_domains.find{|domain| link.host.to_s.end_with?(domain)}
     end
 
     #
@@ -289,7 +289,7 @@ module Anemone
         false
       end
     end
-    
+
     #
     # Returns +true+ if *link* should not be visited because
     # it has a query string and +skip_query_strings+ is true.
